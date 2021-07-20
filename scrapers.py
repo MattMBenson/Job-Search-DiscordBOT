@@ -3,12 +3,10 @@ from bs4 import BeautifulSoup
 import requests
 
 class jobPosting:
-
-    def __init__(self, jobTitle="None", jobCompany="None", jobLocation="None", jobLink="None"):
+    def __init__(self, jobTitle="None", jobCompany="None",jobLink="None"):
         base_indeed_url = "https://ca.indeed.com" 
         self.jobTitle = jobTitle
         self.jobCompany = jobCompany
-        self.jobLocation = jobLocation
         self.jobLink = base_indeed_url + jobLink
 
     def setJobTitle(self, val:str):
@@ -19,8 +17,9 @@ class jobPosting:
         self.jobLink = val
 
 class scrapeIndeed:
-    #def __init__(self, searchTerm = "intern", location = "toronto", timespan = "14"):
-    def __init__(self, searchTerm = "winter 2021 internship", location = "canada", timespan ="14"):
+    #default:
+    #def __init__(self, searchTerm = "winter 2021 internship", location = "canada", timespan ="14"):
+    def __init__(self, searchTerm, location, timespan):
         self.searchTerm = searchTerm
         self.location = location
         self.timespan = timespan
@@ -40,12 +39,10 @@ class scrapeIndeed:
             if title[0:3] == "new":
                 title = title[3:]
             company = item.find(class_="companyName").text.strip()
-            location = item.find(class_="companyLocation").text.strip()
-            aResult = jobPosting(title,company,location,href)
+            aResult = jobPosting(title,company,href)
             jobResults.append(aResult)
-
         return jobResults
-
+        
     def formatURL(self, baseURL, pageNum=0) -> str:
         resultant = ""
         resultant += baseURL + self.inputFix(self.searchTerm) + "&l=" + self.inputFix(self.location) + "&fromage=" + self.timespan + "&start=" + str(pageNum)
@@ -60,19 +57,5 @@ class scrapeIndeed:
                 resultant+= term[i]
         return resultant
 
-def textSampleMessage(position:jobPosting):
-    print("Company:", position.jobCompany)
-    print("Position:", position.jobTitle)
-    print("Link:", position.jobLink)
 
-def main():
-    #test area
-    search = scrapeIndeed()
-    foundPositions = search.collectPostings()
-    for job in foundPositions:
-        textSampleMessage(job)
-        print("\n")
-
-if __name__ == '__main__':
-    main()
 
