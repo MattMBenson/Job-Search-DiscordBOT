@@ -1,26 +1,54 @@
+import re
 from bs4 import BeautifulSoup
 import requests
 
+class jobPosting:
+
+    def __init__(self, jobTitle="None", jobCompany="None", jobLocation="None", jobLink="None"):
+        base_indeed_url = "https://ca.indeed.com" 
+        self.jobTitle = jobTitle
+        self.jobCompany = jobCompany
+        self.jobLocation = jobLocation
+        self.jobLink = base_indeed_url + jobLink
+
+    def setJobTitle(self, val:str):
+        self.jobTitle = val
+    def setJobLocation(self, val:str):
+        self.jobLocation = val
+    def setJobLink(self, val:str):
+        self.jobLink = val
+
 class scrapeIndeed:
     #def __init__(self, searchTerm = "intern", location = "toronto", timespan = "14"):
-    def __init__(self, searchTerm = "winter 2021 internship", location = "vancouver", timespan ="14"):
+    def __init__(self, searchTerm = "winter 2021 internship", location = "canada", timespan ="14"):
         self.searchTerm = searchTerm
         self.location = location
         self.timespan = timespan
 
-    def collectPostings(self, page="0"):
+    def collectPostings(self) -> list:
         base_indeed_url = "https://ca.indeed.com/jobs?q="
-        r = requests.get(self.formatURL(base_indeed_url,page))
+        r = requests.get(self.formatURL(base_indeed_url,0))
+        print(self.formatURL(base_indeed_url,0))
         soup = BeautifulSoup(r.content, 'html5lib')
-        #set of listings
 
-        setPostings = soup.find_all(class_="resultContent")
-        print(setPostings)
+        hrefList = [] 
+        jobResults = []
+        info = soup.find_all('a',{'class':re.compile('^tapItem fs-unmask result job_.*')})
+        for item in info:
+            href = item.get('href')
+            title = item.find(class_="heading4 color-text-primary singleLineTitle tapItem-gutter").text.strip()
+            if title[0:3] == "new":
+                title = title[3:]
+            company = item.find(class_="companyName").text.strip()
+            location = item.find(class_="companyLocation").text.strip()
+            aResult = jobPosting(title,company,location,href)
+            jobResults.append(aResult)
 
-    
-    def formatURL(self, baseURL, nextPage=0) -> str:
+        return jobResults
+
+    def formatURL(self, baseURL, pageNum=0) -> str:
         resultant = ""
-        resultant += baseURL + self.inputFix(self.searchTerm) + "&l=" + self.inputFix(self.location) + "&fromage=" + self.timespan + "&start=" + str(nextPage)
+        resultant += baseURL + self.inputFix(self.searchTerm) + "&l=" + self.inputFix(self.location) + "&fromage=" + self.timespan + "&start=" + str(pageNum)
         return resultant
 
     def inputFix(self, term) -> str:
@@ -32,13 +60,19 @@ class scrapeIndeed:
                 resultant+= term[i]
         return resultant
 
+def textSampleMessage(position:jobPosting):
+    print("Company:", position.jobCompany)
+    print("Position:", position.jobTitle)
+    print("Link:", position.jobLink)
+
 def main():
     #test area
-    test = scrapeIndeed()
-    test.collectPostings(0) #page 1
-    test.collectPostings(10) #page 2
-    test.collectPostings(20) #page 3
-    
+    search = scrapeIndeed()
+    foundPositions = search.collectPostings()
+    for job in foundPositions:
+        textSampleMessage(job)
+        print("\n")
+
 if __name__ == '__main__':
     main()
 
