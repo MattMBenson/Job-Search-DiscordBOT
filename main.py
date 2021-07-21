@@ -33,9 +33,6 @@ def getTemplate()->str:
     outputTemplate = "**Position**: {}\n**Company**: {}\n**Link**: {}\n\n"
     return outputTemplate
 
-def splitMessage(msg)->tuple:
-    pass
-
 client = discord.Client()
 
 @client.event
