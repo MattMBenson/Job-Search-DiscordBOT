@@ -1,8 +1,8 @@
 from scrapers import *
+from settings import *
 import discord
 
 #Globals
-botTOKEN = "ODY3MTM3MDEyNjAzMjg5NjMx.YPcuRg.BzJdTv22RVkV3rFzsh1ojMbBG-U"
 
 searchTerm = ""
 location = "Toronto"
@@ -87,7 +87,7 @@ async def on_message(message):
     elif message.content.startswith("&query"):
         await message.channel.send("Location: "+location+" | TimeSpan: "+timeSpan)
     
-client.run(botTOKEN)
+client.run(BOT_TOKEN)
 
 #TESTfd
 #def main():
