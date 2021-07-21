@@ -9,9 +9,7 @@ def textSampleMessage(position:jobPosting):
 def main():
     scrapeForMe = scrapeIndeed("associate","toronto","3")
     foundPositions = scrapeForMe.collectPostings()
-    for job in foundPositions:
-        textSampleMessage(job)
-        print("\n")
+    
 
 if __name__ == '__main__':
     main()
