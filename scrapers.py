@@ -7,7 +7,7 @@ class jobPosting:
         base_indeed_url = "https://ca.indeed.com" 
         self.jobTitle = jobTitle
         self.jobCompany = jobCompany
-        self.jobLink = base_indeed_url + jobLink
+        self.jobLink = "<" + base_indeed_url + jobLink + ">"
 
     def setJobTitle(self, val:str):
         self.jobTitle = val
@@ -27,7 +27,7 @@ class scrapeIndeed:
     def collectPostings(self) -> list:
         base_indeed_url = "https://ca.indeed.com/jobs?q="
         r = requests.get(self.formatURL(base_indeed_url,0))
-        print(self.formatURL(base_indeed_url,0))
+        #print(self.formatURL(base_indeed_url,0))
         soup = BeautifulSoup(r.content, 'html5lib')
 
         hrefList = [] 
