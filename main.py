@@ -1,9 +1,10 @@
 from scrapers import *
-from settings import *
+from settings import BOT_TOKEN
 import discord
 
 #Globals
 
+client = discord.Client()
 searchTerm = ""
 location = "Toronto"
 timeSpan = "3"
@@ -11,29 +12,18 @@ timeSpan = "3"
 def displayListings(resultList:list)-> str:
     #remove counter to allow more outputs
     output = ""
-    count = 0
     for JOB in resultList:
         result = getTemplate().format(
             JOB.jobTitle,
             JOB.jobCompany,
             JOB.jobLink
         )
-        count+=1
         output+=result
-        if count >=3:
-            break
     return output
 
-def getTemplate()->str:        
-    #outputTemplate = """
-    #**Position**: {}
-    #**Company**: {}
-    #**Link**: {}
-    #"""    
+def getTemplate()->str:            
     outputTemplate = "**Position**: {}\n**Company**: {}\n**Link**: {}\n\n"
     return outputTemplate
-
-client = discord.Client()
 
 @client.event
 async def on_ready():
@@ -47,9 +37,10 @@ async def on_message(message):
     global location
     global timeSpan 
 
+
     if message.author == client.user:
         return
-
+        
     #fetch results with 'searchTerm'
     elif message.content.startswith("&fetch"):
         searchTerm = message.content
@@ -58,8 +49,36 @@ async def on_message(message):
             await message.channel.send("Err: Enter a search term!")
         else:
             webScrapeResults = scrapeIndeed(searchTerm, location, timeSpan).collectPostings()
-            await message.channel.send(displayListings(webScrapeResults))
-    
+
+            embed = discord.Embed(
+                title = "Jobs Found for Search -> '{}'".format(searchTerm),
+                colour = discord.Colour.orange()  
+            )
+            embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+
+            amount_of_entries = 0
+            for JOB in webScrapeResults:
+
+                embed.add_field(name='Position',value=JOB.jobTitle, inline=True)
+                embed.add_field(name='Company',value=JOB.jobCompany, inline=True)
+                embed.add_field(name='Link',value='[Here]({})'.format(JOB.jobLink), inline=True)
+                amount_of_entries +=1
+
+                if (amount_of_entries > 8 and len(webScrapeResults) > 8):
+                    #send above embed
+                    await message.channel.send(embed=embed)
+                    embed = discord.Embed(
+                    colour = discord.Colour.orange()  
+                    )
+
+                    for i in range(9,len(webScrapeResults)):
+                        embed.add_field(name='Position',value=webScrapeResults[i].jobTitle, inline=True)
+                        embed.add_field(name='Company',value=webScrapeResults[i].jobCompany, inline=True)
+                        embed.add_field(name='Link',value='[Here]({})'.format(webScrapeResults[i].jobLink), inline=True)
+                    break
+
+            await message.channel.send(embed=embed)
+
     #set default location to search with
     elif message.content.startswith("&location"):
         location = message.content
