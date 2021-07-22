@@ -1,3 +1,4 @@
+from os import name
 from scrapers import *
 from settings import BOT_TOKEN
 import discord
@@ -40,9 +41,9 @@ async def on_message(message):
 
     if message.author == client.user:
         return
-        
+
     #fetch results with 'searchTerm'
-    elif message.content.startswith("&fetch"):
+    elif message.content.startswith(">fetch"):
         searchTerm = message.content
         searchTerm = searchTerm[7:]
         if (searchTerm == ""):
@@ -80,13 +81,13 @@ async def on_message(message):
             await message.channel.send(embed=embed)
 
     #set default location to search with
-    elif message.content.startswith("&location"):
+    elif message.content.startswith(">location"):
         location = message.content
         location = location[10:]
         await message.channel.send("Location has been set to: "+location)
 
     #set default timespan to search with 
-    elif message.content.startswith("&timespan"):
+    elif message.content.startswith(">timespan"):
         temp = timeSpan #hold prev value in case input error
         timeSpan = message.content
         str(timeSpan)
@@ -97,11 +98,19 @@ async def on_message(message):
             await message.channel.send("Enter an appriorate time span. Refer to &help!")
             timeSpan = temp
     
-    elif message.content.startswith("&help"):
-        await message.channel.send("You've accessed the empty help menu.. Too Be Implemented!")
+    elif message.content.startswith(">help"):
+        embed = discord.Embed(
+                title = "Useful Commands",
+                colour = discord.Colour.purple(),  
+            )
+        embed.add_field(name='>fetch',value="-> input key-word/term used for searching. Returns list of results Ex *>fetch developer*", inline=False)
+        embed.add_field(name='>location',value="-> set location for >fetch command. Ex *>location Toronto*")
+        embed.add_field(name='>timespan',value="-> set timespan for >fetch command. Options: '1' (24 hours), '3' days, '7' week, '14' two-week. Ex *>timespan 3*")
+        embed.add_field(name='>query',value="-> returns current location and timespan settings. Ex *>query*")
 
-    elif message.content.startswith("&query"):
+    elif message.content.startswith(">query"):
         await message.channel.send("Location: "+location+" | TimeSpan: "+timeSpan)
+        
     
 client.run(BOT_TOKEN)
 
