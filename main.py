@@ -4,27 +4,12 @@ from settings import BOT_TOKEN
 import discord
 
 #Globals
+#Defaults set to Toronto & 3 Day search, with blank search_term
 
 client = discord.Client()
-searchTerm = ""
+search_term = ""
 location = "Toronto"
-timeSpan = "3"
-
-def displayListings(resultList:list)-> str:
-    #remove counter to allow more outputs
-    output = ""
-    for JOB in resultList:
-        result = getTemplate().format(
-            JOB.jobTitle,
-            JOB.jobCompany,
-            JOB.jobLink
-        )
-        output+=result
-    return output
-
-def getTemplate()->str:            
-    outputTemplate = "**Position**: {}\n**Company**: {}\n**Link**: {}\n\n"
-    return outputTemplate
+time_span = "3"
 
 @client.event
 async def on_ready():
@@ -34,48 +19,47 @@ async def on_ready():
 async def on_message(message):
 
     #Defaults
-    global searchTerm 
+    global search_term 
     global location
-    global timeSpan 
+    global time_span 
 
 
     if message.author == client.user:
         return
 
-    #fetch results with 'searchTerm'
+    #fetch results with 'search_term'
     elif message.content.startswith(">fetch"):
-        searchTerm = message.content
-        searchTerm = searchTerm[7:]
-        if (searchTerm == ""):
+        search_term = message.content
+        search_term = search_term[7:]
+        if (search_term == ""):
             await message.channel.send("Err: Enter a search term!")
         else:
-            webScrapeResults = scrapeIndeed(searchTerm, location, timeSpan).collectPostings()
+            scrape_results = ScrapeIndeed(search_term, location, time_span).collect_postings()
 
             embed = discord.Embed(
-                title = "Jobs Found for Search -> '{}'".format(searchTerm),
+                title = "Jobs Found for Search -> '{}'".format(search_term),
                 colour = discord.Colour.orange()  
             )
-            embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+            embed.set_author(name = message.author, icon_url = message.author.avatar_url)
 
             amount_of_entries = 0
-            for JOB in webScrapeResults:
+            for JOB in scrape_results:
+                embed.add_field(name='Position',value=JOB.job_title, inline=True)
+                embed.add_field(name='Company',value=JOB.job_company, inline=True)
+                embed.add_field(name='Link',value='[Here]({})'.format(JOB.job_link), inline=True)
+                amount_of_entries += 1
 
-                embed.add_field(name='Position',value=JOB.jobTitle, inline=True)
-                embed.add_field(name='Company',value=JOB.jobCompany, inline=True)
-                embed.add_field(name='Link',value='[Here]({})'.format(JOB.jobLink), inline=True)
-                amount_of_entries +=1
-
-                if (amount_of_entries > 8 and len(webScrapeResults) > 8):
+                if (amount_of_entries > 7 and len(scrape_results) > 8):
                     #send above embed
                     await message.channel.send(embed=embed)
                     embed = discord.Embed(
                     colour = discord.Colour.orange()  
                     )
 
-                    for i in range(9,len(webScrapeResults)):
-                        embed.add_field(name='Position',value=webScrapeResults[i].jobTitle, inline=True)
-                        embed.add_field(name='Company',value=webScrapeResults[i].jobCompany, inline=True)
-                        embed.add_field(name='Link',value='[Here]({})'.format(webScrapeResults[i].jobLink), inline=True)
+                    for i in range(9,len(scrape_results)):
+                        embed.add_field(name='Position',value=scrape_results[i].job_title, inline=True)
+                        embed.add_field(name='Company',value=scrape_results[i].job_company, inline=True)
+                        embed.add_field(name='Link',value='[Here]({})'.format(scrape_results[i].job_link), inline=True)
                     break
 
             await message.channel.send(embed=embed)
@@ -86,38 +70,30 @@ async def on_message(message):
         location = location[10:]
         await message.channel.send("Location has been set to: "+location)
 
-    #set default timespan to search with 
+    #set default time_span to search with 
     elif message.content.startswith(">timespan"):
-        temp = timeSpan #hold prev value in case input error
-        timeSpan = message.content
-        str(timeSpan)
-        timeSpan = timeSpan[10:]
-        if timeSpan=="1" or timeSpan=="3" or timeSpan=="7" or timeSpan=="14":
-            await message.channel.send("Time-Span has been set to: "+timeSpan)
+        temp = time_span #hold prev value in case input error
+        time_span = message.content
+        str(time_span)
+        time_span = time_span[10:]
+        if time_span == "1" or time_span == "3" or time_span == "7" or time_span == "14":
+            await message.channel.send("TimeSpan has been set to: "+time_span)
         else:
             await message.channel.send("Enter an appriorate time span. Refer to &help!")
-            timeSpan = temp
+            time_span = temp
     
     elif message.content.startswith(">help"):
         embed = discord.Embed(
                 title = "Useful Commands",
                 colour = discord.Colour.purple(),  
             )
-        embed.add_field(name='>fetch',value="-> input key-word/term used for searching. Returns list of results Ex *>fetch developer*", inline=False)
-        embed.add_field(name='>location',value="-> set location for >fetch command. Ex *>location Toronto*")
-        embed.add_field(name='>timespan',value="-> set timespan for >fetch command. Options: '1' (24 hours), '3' days, '7' week, '14' two-week. Ex *>timespan 3*")
-        embed.add_field(name='>query',value="-> returns current location and timespan settings. Ex *>query*")
+        embed.add_field(name='>fetch',value="input key-word/term used for searching. Returns list of results Ex *>fetch developer*", inline=False)
+        embed.add_field(name='>location',value="set location for >fetch command. Ex *>location Toronto*", inline=False)
+        embed.add_field(name='>time_span',value="set time_span for >fetch command. Options: '1' (24 hours), '3' days, '7' week, '14' two-week. Ex *>time_span 3*", inline=False)
+        embed.add_field(name='>query',value="returns current location and time_span settings. Ex *>query*", inline=False)
+        await message.channel.send(embed=embed)
 
     elif message.content.startswith(">query"):
-        await message.channel.send("Location: "+location+" | TimeSpan: "+timeSpan)
+        await message.channel.send("Location: "+location+" | time_span: "+time_span)
         
-    
 client.run(BOT_TOKEN)
-
-#TESTfd
-#def main():
-#    scrapeForMe = scrapeIndeed("associate","toronto","3")
-#    foundPositions = scrapeForMe.collectPostings()
-#    print(displayListings(foundPositions))
-#if __name__ == '__main__':
-#    main()
