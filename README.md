@@ -33,7 +33,7 @@ Currently in the works
 * Execute main.py to initiate the bot. To verify if working correctly, look for `We have logged in as Job Hunting Bot#2287` in the terminal shortely after it's ran.
 * In discord server, bot should now be appearing online. Type ">help" to view current list of accessible commands!
 
-<img src="assets/help_use.png" width="600" height="320">
+<img src="assets/help_use.png" width="600" height="340">
 
 ## Authors
 
