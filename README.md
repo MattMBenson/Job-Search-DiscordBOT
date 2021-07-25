@@ -47,8 +47,8 @@ Sample use case:
 Contributors names and contact info
 
 Matthew Benson
-3rd Year Computer Science Major @ Brock University
-ex. [LinkedIn](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
+* 3rd year Computer Science Major at Brock University
+* [LinkedIn](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
 
 ## References
 
