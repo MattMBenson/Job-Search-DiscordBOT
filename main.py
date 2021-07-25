@@ -70,7 +70,7 @@ async def on_message(message):
         await message.channel.send("Location has been set to: "+location)
 
     #set default time_span to search with 
-    elif message.content.startswith(">timespan"):
+    elif message.content.startswith(">time_span"):
         temp = time_span #hold prev value in case input error
         time_span = message.content
         str(time_span)
