@@ -39,8 +39,9 @@ Currently in the works
 
 Contributors names and contact info
 
-ex. Matthew Benson  
-ex. [@MatthewBenson](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
+Matthew Benson
+3rd Year Computer Science Major @ Brock University
+ex. [LinkedIn](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
 
 ## References
 App Icon 
