@@ -1,5 +1,4 @@
-# Job Search Discord BOT
-<img src="assets/bot_icon.png" width="100" height="100">
+# Job Search Discord BOT <img src="assets/bot_icon.png" width="100" height="100">
 
 Add custom discord bot to a server to support your members in a job search. Use it from Software Developer Internship -> Walmart Warehouse Associate!
 
@@ -34,8 +33,6 @@ Currently in the works
 * Execute main.py to initiate the bot. To verify if working correctly, look for `We have logged in as Job Hunting Bot#2287` in the terminal shortely after it's ran.
 * In discord server, bot should now be appearing online. Type ">help" to view current list of accessible commands!
 
-
-
 ## Authors
 
 Contributors names and contact info
@@ -45,5 +42,6 @@ Matthew Benson
 ex. [LinkedIn](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
 
 ## References
+
 App Icon 
 * [ClipArtMax](https://www.clipartmax.com/middle/m2i8d3d3G6N4N4G6_magnifying-glass-icon-for-kids-new-york-times-app-icon/)
