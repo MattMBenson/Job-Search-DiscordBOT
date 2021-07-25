@@ -35,6 +35,13 @@ Currently in the works
 
 <img src="assets/help_use.png" width="600" height="340">
 
+Sample use case:
+`location` set to "Canada"
+`timespan` set to "14" (days)
+`fetch` called with keyword "associate"
+
+<img src="assets/sampleuse.png" width="600" height="340">
+
 ## Authors
 
 Contributors names and contact info
