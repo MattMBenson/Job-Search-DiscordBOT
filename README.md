@@ -1,4 +1,5 @@
 # Job Search Discord BOT
+<img src="assets/bot_icon.png" width="100" height="100">
 
 Add custom discord bot to a server to support your members in a job search. Use it from Software Developer Internship -> Walmart Warehouse Associate!
 
