@@ -40,7 +40,7 @@ Sample use case:
 `timespan` set to "14" (days)
 `fetch` called with keyword "associate"
 
-<img src="assets/sampleuse.png" width="600" height="340">
+<img src="assets/sampleuse.png" width="600" height="300">
 
 ## Authors
 
