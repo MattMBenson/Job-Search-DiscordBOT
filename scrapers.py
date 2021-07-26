@@ -25,7 +25,7 @@ class ScrapeIndeed:
     def collect_postings(self) -> list:
         base_indeed_url = "https://ca.indeed.com/jobs?q="
         req = requests.get(self.format_url(base_indeed_url, 0))
-        soup = BeautifulSoup(req.content, 'html5lib')
+        soup = BeautifulSoup(req.content, 'html.parser')
 
         job_results = []
         info = soup.find_all('a',{'class':re.compile('^tapItem fs-unmask result job_.*')})
