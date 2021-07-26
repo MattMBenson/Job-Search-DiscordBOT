@@ -70,7 +70,7 @@ async def on_message(message):
         await message.channel.send("Location has been set to: "+location)
 
     #set default time_span to search with 
-    elif message.content.startswith(">time_span"):
+    elif message.content.startswith(">timespan"):
         temp = time_span #hold prev value in case input error
         time_span = message.content
         str(time_span)
@@ -88,7 +88,7 @@ async def on_message(message):
             )
         embed.add_field(name='>fetch',value="input key-word/term used for searching. Returns list of results Ex *>fetch developer*", inline=False)
         embed.add_field(name='>location',value="set location for >fetch command. Ex *>location Toronto*", inline=False)
-        embed.add_field(name='>time_span',value="set timespan for >fetch command. Options: '1' (24 hours), '3' days, '7' week, '14' two-week. Ex *>time_span 3*", inline=False)
+        embed.add_field(name='>timespan',value="set timespan for >fetch command. Options: '1' (24 hours), '3' days, '7' week, '14' two-week. Ex *>time_span 3*", inline=False)
         embed.add_field(name='>query',value="returns current location and time_span settings. Ex *>query*", inline=False)
         await message.channel.send(embed=embed)
 
