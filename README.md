@@ -40,15 +40,15 @@ Sample use case:
 `timespan` set to "14" (days)
 `fetch` called with keyword "associate"
 
-<img src="assets/sampleuse.png" width="600" height="340">
+<img src="assets/sampleuse.png" width="600" height="300">
 
 ## Authors
 
 Contributors names and contact info
 
 Matthew Benson
-3rd Year Computer Science Major @ Brock University
-ex. [LinkedIn](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
+* 3rd year Computer Science Major at Brock University
+* [LinkedIn](https://www.linkedin.com/in/matthew-benson-59b1a31b7/)
 
 ## References
 
